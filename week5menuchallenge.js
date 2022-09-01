@@ -16,7 +16,7 @@ class Tamagoppy {
     }
 
     describe(){
-        return `Your pet tamagoppy, ${this.name} is a beautiful ${this.color} and weighs ${this.weight} kilos`;
+        return `Your pet tamagoppy, ${this.name}, is a beautiful ${this.color} and weighs ${this.weight} kilos`;
     }
 }
 
@@ -38,9 +38,18 @@ class Daycare {
 
 //method used to remove tamagoppys from the list. Using the menu a valid name is passed in, and the filter
 //function then removes that item from the list by setting array equal to a filter of everything but said name
-    removeTamagoopy(tamagoppy) {
-        if (tamagoppy instanceof Tamagoppy){
-            this.tamagoppys = this.tamagoppys.filter(goppy =>! tamagoppy);
+    removeTamagoppy(i) {
+        console.log(i)
+        if (this.tamagoppys[i] instanceof Tamagoppy){
+            //console.log(this.tamagoppys[i])
+            alert(`${this.tamagoppys[i].name} has been removed...
+
+            ${this.tamagoppys[i].weight} pounds you no longer have to deal with`)
+            //console.log(this.tamagoppys)
+            this.tamagoppys.splice(i,1);
+            //console.log(this.tamagoppys)
+        } else {
+            alert('Looks like Bob took a smoke break... Please come again soon.')
         }
     }
 
@@ -102,11 +111,8 @@ class Menu {
                 case '4':
                     this.clippahPurchase();
                     break;
-                //case null:
-                  //  selection += 1;
-                  //  break;
                 default:
-                    alert('Invalid selection')
+                    selection = 0;
             }
             //selection = this.menuScreen();
         }
@@ -145,8 +151,7 @@ class Menu {
         //let daycareList = Daycare
         if (this.daycare.tamagoppys.length > 0) {
             for (let goppy in this.daycare.tamagoppys){
-                console.log(goppy)
-                tamagoppyListString += this.daycare.tomogoppys[goppy - 1] + "\n"
+                tamagoppyListString += this.daycare.tamagoppys[goppy].name + "\n"
             }
             alert(tamagoppyListString)
             
@@ -166,15 +171,36 @@ class Menu {
 
         Proceed?`)
             if (confirmation === true){
-                for (goppy in this.daycare.tamagoppys){
-                    deathList += goppy + "\n"
+                for (let goppy in this.daycare.tamagoppys){
+                    deathList += this.daycare.tamagoppys[goppy].name + "\n"
                 }
                 let deadGuy = prompt(deathList);
-                if (this.daycare.tamagoppys.find(deadGuy) == deadGuy){
-                    this.daycare.removeTamagoopy(deadGuy);
+                //console.log(this.daycare.removeTamagoppy(this.daycare.tamagoppys.findIndex(row => row.indexOf(deadGuy) !== -1)))
+                let removed = false;            
+                for (let i in this.daycare.tamagoppys){
+                    //console.log(i)
+                    //console.log(this.daycare.tamagoppys[i].name)
+                    if (this.daycare.tamagoppys[i].name === deadGuy){
+                        this.daycare.removeTamagoppy(i)
+                        removed = true;
+                    }
+                }
+                if (removed === false){
+                    alert('Please enter a valid name for disposal')
+                }
+                /*for (let i in this.daycare.tamagoppys){
+                    if (this.daycare.tamagoppys[i].name !== deadGuy){
+                        alert('Please enter a valid name to proceed with disposal')
+                    }
+                }
+                
+                if (this.daycare.tamagoppys.includes(deadGuy) === true){
+                    let deadOne = this.daycare.tamagoppys.
+                    this.daycare.removeTamagoppy(this.daycare.tamagoppys.findIndex(row => row.indexOf(deadGuy) !== -1));
                 } else{
                     alert(`Please enter a valid tamagoppy name to proceed with disposal`);
                 }
+                */
             } else{
                 alert(`BOB, STOP USING THE WHETSTONE, CLIENT CHANGED THEIR MIND`);
             }
