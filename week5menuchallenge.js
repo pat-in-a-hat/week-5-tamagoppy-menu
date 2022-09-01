@@ -16,7 +16,7 @@ class Tamagoppy {
     }
 
     describe(){
-        return `Your pet Tamagoppy, ${this.name} is a beautiful ${this.color} and weighs ${this.weight} kilos`;
+        return `Your pet tamagoppy, ${this.name} is a beautiful ${this.color} and weighs ${this.weight} kilos`;
     }
 }
 
@@ -26,10 +26,11 @@ class Daycare {
         this.tamagoppys = [];
         this.scissorCost = 10;
         this.scissorCount = 0;
+        this.selectedTamagoppy = null;
     }
-    addTamagoppy(tamagoppy) {
-        if (tamagoppy instanceof Tamagoppy) {
-            this.tamagoppys.push(tamagoppy);
+    addTamagoppy(goppy) {
+        if (goppy instanceof Tamagoppy) {
+            this.tamagoppys.push(goppy);
         } else {
             throw new Error(`This tamagoppy does not exist. Perhaps it is a figment of your imagination?`)
         }
@@ -45,23 +46,29 @@ class Daycare {
 
     buyScissors() {
         let payment = prompt(`To purchase a pair of our deluxe snippers, please enter your preferred form of payment`)
+        let counter = this.scissorCount
         if (payment >= this.scissorCost){
             this.scissorCount += 1
-            return `You successfully purchased a pair of scissors! You now own ${this.scissorCount} scissors.`
+            if (this.scissorCount > 1){
+                alert(`You successfully purchased a pair of scissors! You now own ${this.scissorCount} pairs of scissors.`)
+            } else {
+                alert(`You successfully purchased a pair of scissors! You now own ${this.scissorCount} pair of scissors.`)
+            }
         } else {
-            return `Scissors ain't free, honey. Come back when you got the goods.`
+            alert(`Scissors ain't free, honey. Come back when you got the goods.`)
         }
     }
 
-    describe() {
-        return `Welcome to ${this.name}! You currently have ${this.tamagoppys.length} tamagoppys in our tender, loving, extra sharp care.`
+    describe(){
+        alert(`Welcome to ${this.name}! You currently have ${this.tamagoppys.length} tamagoppys in our tender, loving, extra sharp care.`)
     }
 }
 
 class Menu {
     constructor (){
         //this.tamagoppylist = [];
-        this.selectedTamagoppy = null;
+        //this.selectedTamagoppy = null;
+        this.daycare = new Daycare();
     }
 
     /*start() {
@@ -71,6 +78,12 @@ class Menu {
         }
     }
     */
+
+    start(){
+        this.daycare.describe()
+        let begin = this.mainMenu();
+
+    }
 
     mainMenu(){
         let selection = this.menuScreen();
@@ -88,69 +101,95 @@ class Menu {
                     break;
                 case '4':
                     this.clippahPurchase();
+                    break;
+                //case null:
+                  //  selection += 1;
+                  //  break;
                 default:
-                    selection = 0;
+                    alert('Invalid selection')
             }
-            selection = this.menuScreen();
+            //selection = this.menuScreen();
         }
+        alert('Closing menu... Goodybe!')
     }
 
     menuScreen(){
         return prompt(`
-        ${Daycare.describe()}
         Press 1 to create a new tamagoppy
         Press 2 to view the tamagoppys in our care
         Press 3 for tamagoppy disposal services
         Press 4 to purchase a pair of our world class clippahs
+
+        To exit press 0
         `)
     }
 
     createTamagoppy(){
         let confirmation = confirm(`Using cutting edge technology our scissor specialist will create you a new Tamagoppy.
+        
         Please click OK to proceed.`)
         if (confirmation === true){
             let name = prompt(`Enter a name for your new tamagoppy`)
             let petcolor = prompt('Enter a color for your tamagoppy')
-            Daycare.addTamagoppy(new Tamagoppy(name,petcolor));
-        }else{
-            return this.menuScreen
+            this.daycare.addTamagoppy(this.daycare.selectedTamagoppy = new Tamagoppy(name,petcolor));
+            //let petOverview = this.daycare.tamagoppys[this.daycare.tamagoppys.length - 1];
+            alert(`${this.daycare.selectedTamagoppy.describe()}`);
         }
+
+        throw this.mainMenu();
+
     }
 
     viewTamagoppys(){
         let tamagoppyListString = 'Your tamagoppys recieving cutting edge care are: \n';
-        for (goppy in Daycare.tamagoppys){
-            tamagoppyListString += goppy + "\n"
+        //let daycareList = Daycare
+        if (this.daycare.tamagoppys.length > 0) {
+            for (let goppy in this.daycare.tamagoppys){
+                console.log(goppy)
+                tamagoppyListString += this.daycare.tomogoppys[goppy - 1] + "\n"
+            }
+            alert(tamagoppyListString)
+            
+        } else {
+            alert(`Currently there are no tamagoppys in our care.`)
         }
-        alert(tamagoppyListString)
+
+        throw this.mainMenu();
+        
     }
 
     disposeTamagoppy(){
-        let confirmation = confirm(`Tamagoppy Disposal:
+        let deathList = "Please type which tamagoppy you'd like us to cut out of your life: \n"
+        if (this.daycare.tamagoppys.length > 0) {
+            let confirmation = confirm(`Tamagoppy Disposal:
         We have our methods...
 
         Proceed?`)
-        let deathList = "Please type which tamagoppy you'd like us to cut out of your life: \n"
-        if (confirmation === true){
-            for (goppy in Daycare.tamagoppys){
-                deathList += goppy + "\n"
-            }
-            let deadGuy = prompt(deathList)
-            if (Daycare.tamagoppys.find(deadGuy) == deadGuy){
-                Daycare.removeTamagoopy(deadGuy)
+            if (confirmation === true){
+                for (goppy in this.daycare.tamagoppys){
+                    deathList += goppy + "\n"
+                }
+                let deadGuy = prompt(deathList);
+                if (this.daycare.tamagoppys.find(deadGuy) == deadGuy){
+                    this.daycare.removeTamagoopy(deadGuy);
+                } else{
+                    alert(`Please enter a valid tamagoppy name to proceed with disposal`);
+                }
             } else{
-                alert(`Please enter a valid tamagoppy name to proceed with disposal`)
+                alert(`BOB, STOP USING THE WHETSTONE, CLIENT CHANGED THEIR MIND`);
             }
-        } else{
-            alert(`BOB, STOP USING THE WHETSTONE, CLIENT CHANGED THEIR MIND`)
-            return this.menuScreen
+        } else {
+            alert(`I don't see no darn tamagoppys to dispose of for ya`)
         }
+       
+        throw this.mainMenu();
     }
 
     clippahPurchase(){
-        Daycare.buyScissors()
+        this.daycare.buyScissors()
+        throw this.mainMenu();
     }
 }
 
-let menu = new Menu();
-menu.mainMenu();
+let goppyMenu = new Menu();
+goppyMenu.start();
